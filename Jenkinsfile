@@ -1,9 +1,29 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('clean') {
             steps {
-                bat 'mvn --version'
+                bat 'mvn clean'
+            }
+        }
+        stage('install') {
+            steps {
+                bat 'mvn install'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Example') {
+            steps {
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
             }
         }
     }
